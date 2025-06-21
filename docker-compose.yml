@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: alpha_app
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - alpha
+
+  web:
+    image: nginx:alpine
+    container_name: web_server
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./:/var/www
+    ports:
+      - "8080:80"
+    networks:
+      - alpha
+    depends_on:
+      - app
+  db:
+    image: mysql:5.7
+    container_name: alpha_db
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - alpha_db_volume:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - alpha
+    environment:
+      MYSQL_DATABASE: alpha
+      MYSQL_ROOT_PASSWORD: 24559444
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+
+networks:
+  alpha:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+
+volumes:
+  alpha_db_volume:
