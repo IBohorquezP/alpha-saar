@@ -32,6 +32,7 @@
 									data-ced-rif-prefix="{{$cliente->cedRifPrefix}}"
 									data-islr="{{$cliente->islrpercentage}}"
 									data-iva="{{$cliente->ivapercentage}}"
+									data-pp="{{$cliente->pppercentage}}"
 									data-is-contribuyente="{{$cliente->isContribuyente}}"
 									data-condicion="{{$cliente->condicionPago}}"
 									value="{{$cliente->codigo}}">
@@ -279,10 +280,12 @@
 				var retencionInput       =$(value).find('.retencion-pagar');
 				var isrlModal            =$(retencionInput).data('islrModal');
 				var ivaModal             =$(retencionInput).data('ivaModal');
+				var ppModal              =$(retencionInput).data('ppModal');
 				var retencionFecha       =$(retencionInput).data('retencionFecha');
 				var retencionComprobante =$(retencionInput).data('retencionComprobante');
 				isrlModal                =(isrlModal===undefined)?0:isrlModal;
 				ivaModal                 =(ivaModal===undefined)?0:ivaModal;
+				ppModal					 =(ppModal===undefined)?0:ppModal;
 				retencionFecha           =(retencionFecha===undefined)?0:retencionFecha;
 				retencionComprobante     =(retencionComprobante===undefined)?0:retencionComprobante
                 var o={
@@ -290,6 +293,7 @@
                     montoAbonado: commaToNum($(value).find('.saldo-abonado-input').val()),
                     islrpercentage:isrlModal,
                     ivapercentage:ivaModal,
+					pppercentage:ppModal,
                     retencionFecha:retencionFecha,
                     retencionComprobante:retencionComprobante
                 }

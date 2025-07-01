@@ -1,5 +1,5 @@
-﻿<div class="box-body"  id="container">
-<p class="help-block text-right"><span class="text-danger">*</span> Campos obligatorios</p>
+﻿<div class="box-body" id="container">
+    <p class="help-block text-right"><span class="text-danger">*</span> Campos obligatorios</p>
     <div role="tabpanel">
 
         <!-- Nav tabs -->
@@ -27,19 +27,19 @@
                         <label for="inputPassword" class="col-xs-1 control-label">CI./RIF<span class="text-danger">*</span></label>
                         <div class="col-xs-2">
                             <div class="form-group">
-                                  {!! Form::hidden('cedRifPrefix', null, ['id' => 'cedRifPrefix', 'class' => 'operator-input', 'autocomplete'=>'off']) !!}
-                                  <div class="input-group">
-                                      <div class="input-group-btn">
+                                {!! Form::hidden('cedRifPrefix', null, ['id' => 'cedRifPrefix', 'class' => 'operator-input', 'autocomplete'=>'off']) !!}
+                                <div class="input-group">
+                                    <div class="input-group-btn">
                                         <button style="max-height:37px" type="button" class="btn btn-default dropdown-toggle" {{$disabled}} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="operator-text">{{$cliente->cedRifPrefix or "V"}}</span></button>
                                         <ul class="dropdown-menu operator-list">
-                                          <li><a href="#">V</a></li>
-                                          <li><a href="#">E</a></li>
-                                          <li><a href="#">J</a></li>
-                                          <li><a href="#">G</a></li>
+                                            <li><a href="#">V</a></li>
+                                            <li><a href="#">E</a></li>
+                                            <li><a href="#">J</a></li>
+                                            <li><a href="#">G</a></li>
                                         </ul>
-                                      </div>
-                                      {!! Form::text('cedRif', null, [ 'class'=>"form-control", $disabled, 'style'=>'padding-left:2px']) !!}
-                                  </div>
+                                    </div>
+                                    {!! Form::text('cedRif', null, [ 'class'=>"form-control", $disabled, 'style'=>'padding-left:2px']) !!}
+                                </div>
                             </div>
                         </div>
                         <label for="inputPassword" class="col-xs-1 control-label">NIT</label>
@@ -50,21 +50,25 @@
                     <div class="form-group">
                         <label class="col-xs-2 control-label">Nombre ó Razón Social<span class="text-danger">*</span></label>
                         <div class="col-xs-10">
-                        {!! Form::text('nombre', null, [ 'class'=>"form-control", $disabled]) !!}
+                            {!! Form::text('nombre', null, [ 'class'=>"form-control", $disabled]) !!}
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-2 control-label">Tipo<span class="text-danger">*</span></label>
                         <div class="col-xs-4">
-                          {!! Form::select('tipo',["Aeronáutico"=>"Aeronáutico","No Aeronáutico"=>"No Aeronáutico","Mixto"=>"Mixto"], null, [ 'class'=>"form-control", $disabled]) !!}
+                            {!! Form::select('tipo',["Aeronáutico"=>"Aeronáutico","No Aeronáutico"=>"No Aeronáutico","Mixto"=>"Mixto"], null, [ 'class'=>"form-control", $disabled]) !!}
                         </div>
                         <label for="inputPassword" class="col-xs-2  control-label">Fecha de Ingreso</label>
                         <div class="col-xs-4">
-                           {!! Form::text('fechaIngreso', null, [ 'class'=>"form-control", $disabled , 'id'=>"ingre_fecha-datepicker"]) !!}
+                            {!! Form::text('fechaIngreso', null, [ 'class'=>"form-control", $disabled , 'id'=>"ingre_fecha-datepicker"]) !!}
                         </div>
                         <label class="col-xs-2 control-label">Condición de Pago</label>
                         <div class="col-xs-4">
-                          {!! Form::select('condicionPago',["Contado"=>"Contado", "Crédito"=>"Crédito"], null, [ 'class'=>"form-control", $disabled]) !!}
+                            {!! Form::select('condicionPago',["Contado"=>"Contado", "Crédito"=>"Crédito"], null, [ 'class'=>"form-control", $disabled]) !!}
+                        </div>
+                        <label class="col-xs-2 control-label">Condición de FBO</label>
+                        <div class="col-xs-4">
+                            {!! Form::select('isFbo', [ "0"=>"No Activa","1"=>"Activa"], null, [ 'class'=>"form-control", $disabled]) !!}
                         </div>
                     </div>
                     <div class="form-group">
@@ -76,7 +80,7 @@
                         <div class="col-xs-4 text-right ">
                             <div class="checkbox">
                                 <label>
-                                {!! Form::checkbox('isEnvioAutomatico',true, null, [ $disabled ]) !!} Enviar facturas al E-mail automáticamente
+                                    {!! Form::checkbox('isEnvioAutomatico',true, null, [ $disabled ]) !!} Enviar facturas al E-mail automáticamente
                                 </label>
                             </div>
                         </div>
@@ -84,7 +88,7 @@
                         <div class=" col-xs-2 text-right">
                             <div class="checkbox">
                                 <label>
-                                    {!! Form::checkbox('isActivo',true, null, [  $disabled ]) !!} Activo
+                                    {!! Form::checkbox('isActivo',true, null, [ $disabled ]) !!} Activo
                                 </label>
                             </div>
                         </div>
@@ -97,7 +101,7 @@
                     <div class="form-group">
                         <label class="col-xs-2 control-label">Dirección Fiscal</label>
                         <div class="col-xs-10">
-                        {!! Form::textarea('direccion', null, [ 'class'=>"form-control", $disabled , 'rows'=>"3", 'cols'=>""]) !!}
+                            {!! Form::textarea('direccion', null, [ 'class'=>"form-control", $disabled , 'rows'=>"3", 'cols'=>""]) !!}
                         </div>
                     </div>
                     <div class="form-group">
@@ -107,7 +111,7 @@
                         </div>
                         <label class="col-xs-2 control-label">País</label>
                         <div class="col-xs-4">
-                         {!! Form::select('pais_id', $paises,  null, [ 'class'=>"form-control", $disabled]) !!}
+                            {!! Form::select('pais_id', $paises, null, [ 'class'=>"form-control", $disabled]) !!}
                         </div>
                     </div>
                     <div class="form-group">
@@ -148,7 +152,7 @@
                             <label>Hangares del Cliente</label>
                         </div>
                         <div class="col-xs-12">
-                            {!! Form::select('hangars[]', $hangars,  $cliente->hangars->lists('id'), [ 'class'=>"form-control", $disabled, 'multiple'=>'multiple', 'id'=>'hangars-select']) !!}
+                            {!! Form::select('hangars[]', $hangars, $cliente->hangars->lists('id'), [ 'class'=>"form-control", $disabled, 'multiple'=>'multiple', 'id'=>'hangars-select']) !!}
                         </div>
                     </div>
                 </div>
@@ -183,21 +187,21 @@
                         <div class="col-xs-10 col-xs-offset-1">
                             <div class="checkbox">
                                 <label>
-                                    {!! Form::checkbox('isContribuyente',true, null, [  $disabled ]) !!} Contribuyente
+                                    {!! Form::checkbox('isContribuyente',true, null, [ $disabled ]) !!} Contribuyente
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                         <label class="col-xs-2 control-label">ISLR %</label>
+                        <label class="col-xs-2 control-label">ISLR %</label>
                         <div class="col-xs-4">
-                        {!! Form::text('islrpercentage', (($cliente->islrpercentage)?$cliente->islrpercentage:'0'), [ 'class'=>"form-control", $disabled ]) !!}
+                            {!! Form::text('islrpercentage', (($cliente->islrpercentage)?$cliente->islrpercentage:'0'), [ 'class'=>"form-control", $disabled ]) !!}
                         </div>
                     </div>
                     <div class="form-group">
-                         <label class="col-xs-2 control-label">IVA %</label>
+                        <label class="col-xs-2 control-label">IVA %</label>
                         <div class="col-xs-4">
-                        {!! Form::text('ivapercentage', (($cliente->ivapercentage)?$cliente->ivapercentage:'0'), [ 'class'=>"form-control", $disabled ]) !!}
+                            {!! Form::text('ivapercentage', (($cliente->ivapercentage)?$cliente->ivapercentage:'0'), [ 'class'=>"form-control", $disabled ]) !!}
                         </div>
                     </div>
                 </div>
@@ -215,10 +219,8 @@
         </div>
     </div>
 </div>
-    @if($disabled!="disabled")
-        <div class="box-footer text-right">
-            <button class="btn btn-primary"> {{$SubmitBtnText}} </button>
-        </div>
-    @endif
-
-
+@if($disabled!="disabled")
+<div class="box-footer text-right">
+    <button class="btn btn-primary"> {{$SubmitBtnText}} </button>
+</div>
+@endif

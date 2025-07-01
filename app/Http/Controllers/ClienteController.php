@@ -41,6 +41,7 @@ class ClienteController extends Controller {
         $cliente->islrpercentage="5";
         $cliente->ivapercentage="75";
         $cliente->pais_id="232";
+		
 		return view("cliente.create", compact('cliente'));
 	}
 
@@ -63,8 +64,9 @@ class ClienteController extends Controller {
 			}
 		}
 
-        $cliente=\App\Cliente::create($request->except('hangars', 'isContribuyente'));
+        $cliente=\App\Cliente::create($request->except('hangars', 'isContribuyente','isFbo'));
 		$cliente->isContribuyente =$request->input('isContribuyente', 0);
+		$cliente->isFbo = $request->input('isFbo', 0); // Valor por defecto 0
         if($request->get('tipo')!="No Aeronáutico")
             $hangars=$request->get('hangars',[]);
         else
@@ -115,6 +117,7 @@ class ClienteController extends Controller {
 
         $cliente->update($request->except('hangars', 'isContribuyente'));
 		$cliente->isContribuyente =$request->input('isContribuyente', 0);
+		$cliente->isFbo = $request->input('isFbo', 0);
         if($request->get('tipo')!="No Aeronáutico")
             $hangars=$request->get('hangars',[]);
         else

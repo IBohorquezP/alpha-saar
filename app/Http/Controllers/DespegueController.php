@@ -118,7 +118,8 @@ class DespegueController extends Controller
             $nacionalidad_matricula = 2; //2 - INTERNACIONAL, NACIONALIDAD VUELO
         }
 
-        $otrosCargos        = OtrosCargo::where('aeropuerto_id', $aeropuerto)
+        $otrosCargos = OtrosCargo::where('aeropuerto_id', $aeropuerto)
+
             ->where('cantidad_unidades', '<>', 0)
             ->where('peso_desde', '<=', $peso)
             ->where('peso_hasta', '>=', $peso)
@@ -127,7 +128,10 @@ class DespegueController extends Controller
             ->where('tipo_matricula', $tipo_matricula)
             ->orderBy('nombre_cargo')->lists('nombre_cargo', 'id');
 
-        return view("despegues.create", compact("aterrizaje", "hangarLocal", "otrosCargos", "nacionalidad_vuelos", "tipoMatriculas", "aeronaves", "puertos", "pilotos", "today"));
+        $clientefbo = Cliente::where('isFbo', 1)->lists('nombre', 'id');
+        $clientefbo = ['' => '-- Sin FBO --'] + $clientefbo;
+
+        return view("despegues.create", compact("aterrizaje", "hangarLocal", "otrosCargos", "nacionalidad_vuelos", "tipoMatriculas", "aeronaves", "puertos", "pilotos", "today", "clientefbo"));
     }
 
     public function filtro(Request $request)
@@ -269,6 +273,8 @@ class DespegueController extends Controller
     public function edit($aterrizaje, $id)
     {
         $despegue            = Despegue::find($id);
+        $clientefbo = Cliente::where('isFbo', 1)->lists('nombre', 'id');
+        $clientefbo = ['' => '-- Sin FBO --'] + $clientefbo;
         $puertos             = Puerto::all();
         $clientes             = Cliente::all();
         $pilotos             = Piloto::all();
@@ -276,7 +282,7 @@ class DespegueController extends Controller
         $aeronaves           = Aeronave::all();
         $tipoMatriculas      = TipoMatricula::all();
         $otrosCargos         = OtrosCargo::lists('nombre_cargo', 'id');
-        return view("despegues.partials.edit", compact("despegue", "otrosCargos", "nacionalidad_vuelos", "tipoMatriculas", "aeronaves", "puertos", "pilotos"));
+        return view("despegues.partials.edit", compact("clientefbo", "despegue", "otrosCargos", "nacionalidad_vuelos", "tipoMatriculas", "aeronaves", "puertos", "pilotos"));
     }
 
     /**
@@ -328,6 +334,7 @@ class DespegueController extends Controller
 
             $totalDuration = $finishTime->diffInMinutes($startTime);
             $despegue->tiempo_estacionamiento = $totalDuration;
+            $despegue->clientefbo = $request->input('clientefbo', null);
             $despegue->save();
         }
 

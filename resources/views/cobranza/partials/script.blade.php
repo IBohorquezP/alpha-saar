@@ -1,6 +1,7 @@
 //porcentaje de retencion, los modifico cunado selecciono un cliente
 var islr=0;
 var iva=0;
+var pp=0;
 var calculatePagarTimeout=null;
 function checkRowCondition(row, saldoAbonado, saldoPendiente,saldoAbonadoText){
 
@@ -185,17 +186,21 @@ $('#accept-retencion-modal-btn').click(function(){
 	var retencionInput =$(tr).find('.retencion-pagar');
 	var isrlModal      =0;
 	var ivaModal       =0;
+	var ppModal        =0;
 
 	if($('#islrper-modal-input').closest('tr').find(':checkbox').prop('checked'))
 		isrlModal=commaToNum($('#islrper-modal-input').val());
 	if($('#ivaper-modal-input').closest('tr').find(':checkbox').prop('checked'))
 		ivaModal=commaToNum($('#ivaper-modal-input').val());
+	if($('#ppper-modal-input').closest('tr').find(':checkbox').prop('checked'))
+		ppModal=commaToNum($('#ppper-modal-input').val());
 
     var retencionFecha=$('#fecha-retencion-input').val();
     var retencionComprobante=$('#comprobante-retencion-input').val();
 	$(retencionInput).val(numToComma(total));
 	$(retencionInput).data('islrModal',isrlModal);
 	$(retencionInput).data('ivaModal',ivaModal);
+	$(retencionInput).data('ppModal',ppModal);
     $(retencionInput).data('retencionFecha',retencionFecha);
     $(retencionInput).data('retencionComprobante',retencionComprobante);
 	var pendiente =commaToNum($(tr).find('.saldo-pendiente').text());
@@ -233,6 +238,7 @@ $('#cxc-table').delegate('.retencion-btn','click',function(){
 	$('#islrper-modal-input').val(numToComma(data.islrper));
 	$('#ivaper-modal-input').val(numToComma(data.ivaper));
 	$('#iva-modal-input').val(numToComma(data.iva));
+	$('#ppper-modal-input').val(numToComma(data.ppper));
 	$('#base-modal-input').val(numToComma(data.base));
 	$(tr).addClass('retencion');
 	if(!data.isRetencionEditable){
@@ -267,6 +273,7 @@ $('#retencion-modal').on('hidden.bs.modal', function () {
 	$('#retencion-modal :checkbox').iCheck('enable');
 	$('#islrper-modal-input').val(0);
 	$('#ivaper-modal-input').val(0);
+	$('#ppper-modal-input').val(0);
 	$('#base-modal-input,#iva-modal-input, #total-modal-input').val(0)
 	$('tr.retencion').removeClass('retencion');
 	$('#retencion-modal').find(':checkbox').iCheck('uncheck');
@@ -329,9 +336,11 @@ $('#cliente-select').chosen({width: "100%"}).change(function(){
 	var cedRif =$(option).data('cedRifPrefix')+$(option).data('cedRif');
 	iva        =0;
 	islr       =0;
+	pp         =0;
 	if($(option).data('isContribuyente')==1){
 		iva  =$(option).data('iva');
 		islr =$(option).data('islr');
+		pp=$(option).data('pp');
 	}
 
 	$('#cliente_nombre-input').val(((nombre)?nombre:""));
@@ -393,6 +402,7 @@ $('#cliente-select').chosen({width: "100%"}).change(function(){
 					ncuotas:0,
 					montoiniciocuota:0,
 					islrpercentage:islr,
+					pppercentage:pp,
 					ivapercentage:iva,
 					retencion:0,
 					total:0
@@ -401,6 +411,7 @@ $('#cliente-select').chosen({width: "100%"}).change(function(){
 			}
 
 			metadata.islrpercentage =isNaN(parseFloat(metadata.islrpercentage))?0:metadata.islrpercentage;
+			metadata.pppercentage =isNaN(parseFloat(metadata.pppercentage))?0:metadata.pppercentage;
 			metadata.ivapercentage  =isNaN(parseFloat(metadata.ivapercentage))?0:metadata.ivapercentage;
 			var pendiente           =value.total-metadata.total;
 			var base                =value.subtotalNeto-metadata.basepagado;

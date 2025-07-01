@@ -49,6 +49,11 @@
 										<td>IVA</td>
 										<td><input type="text" class="form-control retencion-input" id="ivaper-modal-input" data-target="#iva-modal-input" /></td>
 									</tr>
+									<tr>
+										<td>{!! Form::checkbox('estado', '1', true, ["class"=>"retencion-check", "id"=>"pp-checkbox", "autocomplete"=>"off" ]) !!}</td>
+										<td>PP</td>
+										<td><input type="text" class="form-control retencion-input" id="ppper-modal-input" data-target="#pp-modal-input" /></td>
+									</tr>
 								@else
 									<tr>
 										<td>{!! Form::checkbox('estado', true, null, ["class"=>"retencion-check", "id"=>"islr-checkbox", "autocomplete"=>"off" ]) !!}</td>									
@@ -59,6 +64,11 @@
 										<td>{!! Form::checkbox('estado', true, null, ["class"=>"retencion-check", "id"=>"iva-checkbox", "autocomplete"=>"off" ]) !!}</td>
 										<td>IVA</td>
 										<td><input type="text" class="form-control retencion-input" id="ivaper-modal-input" data-target="#iva-modal-input" /></td>
+									</tr>
+									<tr>
+										<td>{!! Form::checkbox('estado', true, null, ["class"=>"retencion-check", "id"=>"pp-checkbox", "autocomplete"=>"off" ]) !!}</td>
+										<td>PP</td>
+										<td><input type="text" class="form-control retencion-input" id="ppper-modal-input" data-target="#pp-modal-input" /></td>
 									</tr>
 								@endif
 							</tbody>

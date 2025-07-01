@@ -27,6 +27,7 @@ class CreacionTablaCliente extends Migration {
             $table->enum('tipo', ['Aeronáutico', 'No Aeronáutico', 'Mixto']);
             $table->boolean('isActivo');
             $table->boolean('isEnvioAutomatico');
+            $table->boolean('isFbo')->default(0);
             $table->date('fechaIngreso');
             /**
              * Segundo tab (Ubicacion) de la pantalla de crear usuario
