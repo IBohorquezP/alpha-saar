@@ -194,6 +194,9 @@ class DespegueController extends Controller
                 return response()->json(array("text" => 'Fecha y hora de despegue no puede ser menor a su aterrizaje', "success" => 0));
         }
 
+        if ($request->clientefbo === '') {
+            $request->merge(['clientefbo' => null]);
+        }
         $despegue                         = Despegue::create($request->except("piloto_id", "puerto_id", "cliente_id", "cobrar_estacionamiento", "cobrar_puenteAbordaje", "cobrar_Formulario", "cobrar_AterDesp", "cobrar_habilitacion", "cobrar_carga", "cobrar_otrosCargos", "otrosCargo_id"));
         $aterrizaje                       = Aterrizaje::find($request->get("aterrizaje_id"));
         $aterrizaje->despegue()->save($despegue);
@@ -293,6 +296,9 @@ class DespegueController extends Controller
      */
     public function update($aterrizaje, $id, DespegueRequest $request)
     {
+        if ($request->input('clientefbo') === '') {
+            $request->merge(['clientefbo' => null]);
+        }
         $despegue     = Despegue::find($id);
         $despegue->update($request->except("nacionalidadVuelo_id", "piloto_id", "puerto_id", "cliente_id", "cobrar_estacionamiento", "cobrar_puenteAbordaje", "cobrar_Formulario", "cobrar_AterDesp", "cobrar_habilitacion", "cobrar_carga", "tiempo_estacionamiento"));
 

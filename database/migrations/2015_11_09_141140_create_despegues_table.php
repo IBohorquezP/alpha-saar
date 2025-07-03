@@ -59,8 +59,7 @@ class CreateDespeguesTable extends Migration {
 			$table->string('condicionPago')->nullable();
 			$table->integer('facturado')->default(0);
 			$table->integer('pagado')->default(0);
-			$table->integer('clientefbo')->nullable();
-
+			$table->integer('clientefbo')->unsigned()->nullable();
 			$table->timestamps();
 		});
 	}
