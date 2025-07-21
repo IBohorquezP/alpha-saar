@@ -32,6 +32,7 @@ class ReporteController extends Controller
         $aeropuerto    = $request->get('aeropuerto',  session('aeropuerto')->id);
         $montos        = [];
         $montosTotales = [];
+        $montosTotalesMeses = [];
         $modulos       = Modulo::where('aeropuerto_id', $aeropuerto)->where('isActivo', 1)->where('nombre', 'DOSAS')->get();
         $primerDiaMes  = Carbon::create($anno, $mes, 1)->startOfMonth();
         $ultimoDiaMes  = Carbon::create($anno, $mes, 1)->endOfMonth();
@@ -208,6 +209,7 @@ class ReporteController extends Controller
         $aeropuerto    = $request->get('aeropuerto',  session('aeropuerto')->id);
         $montos        = [];
         $montosTotales = [];
+        $montosTotalesMeses = [];
         $modulos       = Modulo::where('aeropuerto_id', $aeropuerto)->where('isActivo', 1)->get();
         $ajustesMesTotal = 0;
         $saldoMesTotal = 0;
@@ -432,6 +434,7 @@ class ReporteController extends Controller
         $aeropuerto    = $request->get('aeropuerto',  session('aeropuerto')->id);
         $montos        = [];
         $montosTotales = [];
+        $montosTotalesMeses = [];
         $modulos       = Modulo::where('aeropuerto_id', $aeropuerto)->where('isActivo', 1)->get();
         $primerDiaMes  = Carbon::create($anno, $mes, 1)->startOfMonth();
         $ultimoDiaMes  = Carbon::create($anno, $mes, 1)->endOfMonth();
@@ -2008,7 +2011,7 @@ class ReporteController extends Controller
 
         $facturasManuales = Factura::with('cobros')
             ->whereBetween('fecha', array($annoDesde . '-' . $mesDesde . '-' . $diaDesde,  $annoHasta . '-' . $mesHasta . '-' . $diaHasta))
-            ->whereHas('modulo', function($q){
+            ->whereHas('modulo', function ($q) {
                 $q->where('nombre', '<>', 'EXONERADAS');
             })
             ->where('nFacturaPrefix', $prefixManual)
@@ -2193,10 +2196,10 @@ class ReporteController extends Controller
     //Listado de Facturas Emitidas
     public function getReporteListadoFacturas(Request $request)
     {
-
         $modulos = \App\Modulo::all();
         $clientes = \App\Cliente::all();
-        $view = view('reportes.reporteListadoFacturas', compact('clientes', 'modulos'));
+        $fboClientes = \App\Cliente::where('isFbo', 1)->orderBy('nombre')->get();
+        $view = view('reportes.reporteListadoFacturas', compact('clientes', 'modulos', 'fboClientes'));
         if ($request->isMethod("post")) {
             $facturas = \App\Factura::select('facturas.*');
 
@@ -2204,16 +2207,12 @@ class ReporteController extends Controller
             $modulo       = $request->get('modulo', 0);
             if ($modulo == 0) {
                 if ($aeropuerto == 0) {
-                    //como se van a mostrar todos los nombres de los modulos de todos los aeropuertos
-                    //debo buscar por nimbre en vez de id
                     $facturas->where('facturas.aeropuerto_id', ">", $aeropuerto);
                 } else {
                     $facturas->where('facturas.aeropuerto_id', $aeropuerto);
                 }
             } else {
                 if ($aeropuerto == 0) {
-                    //como se van a mostrar todos los nombres de los modulos de todos los aeropuertos
-                    //debo buscar por nimbre en vez de id
                     $moduloO = \App\Modulo::find($modulo);
                     $facturas->where('facturas.aeropuerto_id', ">", $aeropuerto);
                     $facturas->join('modulos', 'modulos.id', '=', 'facturas.modulo_id');
@@ -2226,10 +2225,8 @@ class ReporteController extends Controller
             $desde = $request->get('desde');
             if ($desde != "")
                 $desdeC        = \Carbon\Carbon::createFromFormat('d/m/Y', $desde);
-            else {
-
+            else
                 $desdeC        = \Carbon\Carbon::minValue();
-            }
 
             $facturas->where('facturas.fecha', '>=', $desdeC->toDateString());
 
@@ -2244,11 +2241,23 @@ class ReporteController extends Controller
             if ($nFactura != "")
                 $facturas->where('facturas.nFactura', $nFactura);
 
-            $cliente_id         = $request->get('cliente_id');
-            $facturas->join('clientes', 'clientes.id', '=', 'facturas.cliente_id');
-
-            if ($cliente_id != "")
-                $facturas->where('clientes.id', $cliente_id);
+            // --- FILTRO POR FBO ---
+            $clientefbo = $request->get('clientefbo');
+            $facturas->join('despegues', 'despegues.factura_id', '=', 'facturas.id');
+            if ($clientefbo != "") {
+                $facturas->where('despegues.clientefbo', $clientefbo);
+            } else {
+                // Si no se selecciona FBO, solo trae facturas con FBO asociado
+                $facturas->whereNotNull('despegues.clientefbo')
+                    ->where('despegues.clientefbo', '<>', '');
+            }
+            $dosasModulo = \App\Modulo::where('nombre', 'DOSAS')->first();
+            if ($dosasModulo) {
+                $facturas->where('facturas.modulo_id', $dosasModulo->id);
+                $listadoModulo = collect([$dosasModulo]);
+            } else {
+                $listadoModulo = collect([]);
+            }
 
             $estatus      = $request->get('estatus');
             if ($estatus == "A") {
@@ -2256,8 +2265,7 @@ class ReporteController extends Controller
             } else {
                 $facturas->with('cobros')->where('facturas.estado', 'like', $estatus);
             }
-	
-            //dd($facturas->toSql(), $facturas->getBindings());
+
             $facturas = $facturas->orderBy('fecha', 'ASC')->orderBy('nFactura', 'ASC')->get();
             $total    = $facturas->sum('total');
             $subtotal = $facturas->sum('subtotal');
@@ -2276,43 +2284,35 @@ class ReporteController extends Controller
             } else {
                 $aeropuertoNombre = "TODOS";
             }
-            if ($cliente_id != '') {
-                $clienteName = \App\Cliente::find($cliente_id);
-                $clienteNombre = $clienteName->nombre;
-            } else {
-                $clienteNombre = "TODOS";
-            }
-
-            switch ($estatus) {
-                case 'C':
-                    $estatusNombre = "COBRADAS";
-                    break;
-                case 'P':
-                    $estatusNombre = "PENDIENTES";
-                    break;
-                case 'A':
-                    $estatusNombre = "ANULADAS";
-                    break;
-                case 'E':
-                    $estatusNombre = "EXONERADAS";
-                    break;
-                case 'V':
-                    $estatusNombre = "VENCIDAS";
-                    break;
-                default:
-                    $estatusNombre = "TODAS";
-                    break;
-            }
-
             if ($modulo != 0) {
                 $listadoModulo = \App\Modulo::where('id', $modulo)->get();
             } else {
                 $listadoModulo = \App\Modulo::where('aeropuerto_id', $aeropuerto)->get();
             }
 
-            $view->with(compact('facturas', 'aeropuerto', 'cliente', 'cliente_id', 'modulo', 'desde', 'hasta', 'nFactura', 'rif', 'nombre', 'estatus', 'estatusNombre', 'total', 'subtotal', 'islr', 'iva', 'moduloNombre', 'aeropuertoNombre', 'clienteNombre', 'listadoModulo'));
+            // Elimina variables de cliente y agrega clientefbo
+            $view->with(compact(
+                'facturas',
+                'aeropuerto',
+                'modulo',
+                'desde',
+                'hasta',
+                'nFactura',
+                'rif',
+                'nombre',
+                'estatus',
+                'estatusNombre',
+                'total',
+                'subtotal',
+                'islr',
+                'iva',
+                'moduloNombre',
+                'aeropuertoNombre',
+                'listadoModulo',
+                'clientefbo',
+                'fboClientes'
+            ));
         }
-
 
         return $view;
     }

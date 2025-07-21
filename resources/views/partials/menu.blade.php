@@ -183,7 +183,7 @@
             		@permission('menu.reporteRecaudacion')
 					<li {{ (\Request::is('reporte/reporteListadoFacturas*') || \Request::is('reporte/reporteListadoFacturaCliente*'))?"class=active":"" }}><a href="#"><i class="fa fa-folder-open"></i><span> Facturación</span><i class="fa fa-angle-left pull-right"></i></a>
 						<ul class="treeview-menu">
-	                   		<li {{ (\Request::is('reporte/reporteListadoFacturas*'))?"class=active":"" }}><a href="{{ URL::to('reporte/reporteListadoFacturas') }}"><i class="fa fa-file-o"></i> 1-. Listado de Facturas Emitidas</a></li>
+	                   		<li {{ (\Request::is('reporte/reporteListadoFacturas*'))?"class=active":"" }}><a href="{{ URL::to('reporte/reporteListadoFacturas') }}"><i class="fa fa-file-o"></i> 1-. Listado de Facturas Emitidas por FBO</a></li>
 	                    	<li {{ (\Request::is('reporte/reporteListadoFacturaCliente*'))?"class=active":"" }}><a href="{{ URL::to('reporte/reporteListadoFacturaCliente') }}"><i class="fa fa-file-o"></i> 2-. Listado de Facturas Emitidas por Cliente</a></li>
 						</ul>  
 					<li {{ (\Request::is('reporte/reporteRelacionCobranza*') || \Request::is('reporte/reporteRelacionFacturasAeronauticasCredito*') || \Request::is('reporte/reporteRelacionIngresosAeronauticosContado*'))?"class=active":"" }}><a href="#"><i class="fa fa-folder-open"></i><span> Cobranza</span><i class="fa fa-angle-left pull-right"></i></a>
