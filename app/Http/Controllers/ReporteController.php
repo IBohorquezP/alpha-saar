@@ -2242,7 +2242,16 @@ class ReporteController extends Controller
                 $facturas->where('facturas.nFactura', $nFactura);
 
             // --- FILTRO POR FBO ---
+            $fboNombre = "TODOS";
             $clientefbo = $request->get('clientefbo');
+
+            if (!empty($clientefbo)) {
+                // Trae directamente al cliente FBO desde la base de datos
+                $fbo = \App\Cliente::where('id', $clientefbo)->where('isFbo', 1)->first();
+                if ($fbo) {
+                    $fboNombre = $fbo->nombre;
+                }
+            }
             $facturas->join('despegues', 'despegues.factura_id', '=', 'facturas.id');
             if ($clientefbo != "") {
                 $facturas->where('despegues.clientefbo', $clientefbo);
@@ -2251,6 +2260,7 @@ class ReporteController extends Controller
                 $facturas->whereNotNull('despegues.clientefbo')
                     ->where('despegues.clientefbo', '<>', '');
             }
+
             $dosasModulo = \App\Modulo::where('nombre', 'DOSAS')->first();
             if ($dosasModulo) {
                 $facturas->where('facturas.modulo_id', $dosasModulo->id);
@@ -2310,7 +2320,8 @@ class ReporteController extends Controller
                 'aeropuertoNombre',
                 'listadoModulo',
                 'clientefbo',
-                'fboClientes'
+                'fboClientes',
+                'fboNombre'
             ));
         }
 
