@@ -2242,14 +2242,14 @@ class ReporteController extends Controller
                 $facturas->where('facturas.nFactura', $nFactura);
 
             // --- FILTRO POR FBO ---
-            $fboNombre = "TODOS";
             $clientefbo = $request->get('clientefbo');
+            $fboNombre = 'TODOS';
 
+            // Si se seleccionó un cliente FBO
             if (!empty($clientefbo)) {
-                // Trae directamente al cliente FBO desde la base de datos
-                $fbo = \App\Cliente::where('id', $clientefbo)->where('isFbo', 1)->first();
-                if ($fbo) {
-                    $fboNombre = $fbo->nombre;
+                $clienteFbo = \App\Cliente::where('id', $clientefbo)->where('isFbo', 1)->first();
+                if ($clienteFbo) {
+                    $fboNombre = $clienteFbo->nombre;
                 }
             }
             $facturas->join('despegues', 'despegues.factura_id', '=', 'facturas.id');
@@ -2299,33 +2299,29 @@ class ReporteController extends Controller
             } else {
                 $listadoModulo = \App\Modulo::where('aeropuerto_id', $aeropuerto)->get();
             }
-
-            // Elimina variables de cliente y agrega clientefbo
-            $view->with(compact(
-                'facturas',
-                'aeropuerto',
-                'modulo',
-                'desde',
-                'hasta',
-                'nFactura',
-                'rif',
-                'nombre',
-                'estatus',
-                'estatusNombre',
-                'total',
-                'subtotal',
-                'islr',
-                'iva',
-                'moduloNombre',
-                'aeropuertoNombre',
-                'listadoModulo',
-                'clientefbo',
-                'fboClientes',
-                'fboNombre'
-            ));
         }
-
-        return $view;
+        return view('reportes.reporteListadoFacturas', compact(
+            'facturas',
+            'aeropuerto',
+            'modulo',
+            'desde',
+            'hasta',
+            'nFactura',
+            'rif',
+            'nombre',
+            'estatus',
+            'estatusNombre',
+            'total',
+            'subtotal',
+            'islr',
+            'iva',
+            'moduloNombre',
+            'aeropuertoNombre',
+            'listadoModulo',
+            'clientefbo',
+            'fboClientes',
+            'fboNombre'
+        ));
     }
 
     //Listado de Facturas emitidas por cliente

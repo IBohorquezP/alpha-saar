@@ -477,7 +477,7 @@
                                 </br>\
                                 DESDE: {{isset($desde)?$desde:"N/A"}} HASTA: {{isset($hasta)?$hasta:"N/A"}} | MÓDULO: DOSAS\
                                 </br>\
-                                FBO: {{$fboNombre}}| AEROPUERTO: {{isset($aeropuertoNombre)?$aeropuertoNombre:"TODOS"}}\
+                                FBO: {{ isset($fboNombre)?$fboNombre:"TODOS" }}| AEROPUERTO: {{isset($aeropuertoNombre)?$aeropuertoNombre:"TODOS"}}\
                                 </br>\
                                 CONDICIÓN: {{isset($estatusNombre)?$estatusNombre:"TODAS"}}\
                             </th>\
